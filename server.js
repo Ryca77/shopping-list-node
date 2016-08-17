@@ -39,8 +39,6 @@ app.post('/items', jsonParser, function(request, response) {
     response.status(201).json(item);
 });
 
-console.log(storage.items)
-
 //delete route
 app.delete('/items/:id', function(request, response) {
     if(!request.params.id) {
@@ -63,13 +61,28 @@ app.delete('/items/:id', function(request, response) {
 });
 
 //put route
-app.put('/items/:id', function(request, response) {
-    if(!request.params.id  && !request.body.id) {
+app.put('/items/:id', jsonParser, function(request, response) {
+    if (!request.body) {
+        return response.sendStatus(400);
+    }
+    if (!request.params.id) {
         return response.sendStatus(400);
     }
     
-    var updated = storage.items.name && storage.item.id;
-    response.status(200).json(updated);
+    var updated = null;
+    
+    for (var i = 0; i < storage.items.length; i++) {
+        var item = storage.items[i];
+        if (item.id == request.params.id) {
+            item.name = request.body.name;
+            updated = item;
+        }
+    }
+    
+    if (updated) {
+      return response.status(200).json(updated);  
+    }
+    
 });
 
 app.listen(process.env.PORT, process.env.IP);

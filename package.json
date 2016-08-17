@@ -1,5 +1,5 @@
 {
-  "name": "shopping-list",
+  "name": "shopping_list",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
